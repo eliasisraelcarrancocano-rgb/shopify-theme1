@@ -1,0 +1,375 @@
+<style>
+    .slider {
+    overflow: hidden;
+    width: 90%; /* reduce el ancho total */
+    max-width: 1400px; /* evita que se haga demasiado grande en pantallas grandes */
+    margin: 0 auto; /* centra el banner horizontalmente */
+    border-radius: 12px; /* opcional: bordes redondeados como en Evolved */
+    overflow: hidden;
+    position: relative;
+    } 
+  
+    .slides {
+        display: flex;
+        width: 100%;
+        transition: transform 1s ease-in-out;
+    }
+
+    .slide {
+        min-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .responsive-image {
+        width: 100%;
+        height: 600px; /* controla la altura del banner en pantallas grandes */
+        object-fit: cover;
+        display: block;
+    }
+      
+    @media screen and (max-width: 740px) {
+    .responsive-image {
+        height: 400px; /* reduce el alto en móviles */
+        object-fit: cover;
+    }
+}
+
+    .slider-dots {
+        text-align: center;
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+    }
+
+    .slider-dot {
+        width: 10px;
+        height: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .slider-dot.active {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .slider-control-prev, .slider-control-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        font-size: 18px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .slider-control-prev {
+        left: 10px;
+    }
+
+    .slider-control-next {
+        right: 10px;
+    }
+
+    @media screen and (max-width: 740px) {
+        .ocultar-desktop {
+            display: none;
+        }
+    }
+
+    @media screen and (min-width: 741px) {
+        .ocultar-mobile {
+            display: none;
+        }
+    }
+    @media screen and (max-width: 989px) {
+  .slider.ocultar-mobile {
+    margin-top: 20px !important;
+  }
+}
+/* ===== FORZAR RADIO DE ESQUINAS DEL BANNER ===== */
+/* Ajusta los valores a lo que quieras ver: 8px, 14px, 24px, etc. */
+
+.banner,               /* selector general del banner (si existe) */
+.slider,               /* tu slider personalizado */
+.slider .slide,        /* cada slide */
+.slider .responsive-image, /* la imagen dentro del slide */
+#Banner-{{ section.id }}, /* si usas la sección image-banner */
+#Banner-{{ section.id }} .banner__media img,
+#Banner-{{ section.id }} .banner__media,
+.banner__media img {
+  border-radius: 14px !important;   /* <-- valor por defecto que aplico, cámbialo */
+  overflow: hidden !important;      /* evita que la imagen sobresalga de las esquinas */
+}
+
+/* Si el contenedor padre tiene máscara/clip, también forzamos el mismo radio ahí */
+.banner__box,
+.slider.ocultar-desktop,
+.slider.ocultar-mobile,
+.card-wrapper {
+  border-radius: 14px !important;
+}
+
+/* === MÓVIL: radio más pronunciado (opcional) === */
+@media screen and (max-width: 740px) {
+  .banner,
+  .slider,
+  .responsive-image,
+  #Banner-{{ section.id }},
+  #Banner-{{ section.id }} .banner__media,
+  #Banner-{{ section.id }} .banner__media img {
+    border-radius: 20px !important; /* ejemplo: más redondeado en móvil */
+    overflow: hidden !important;
+  }
+}
+
+/* === DESKTOP: radio más pequeño (opcional) === */
+@media screen and (min-width: 741px) {
+  .banner,
+  .slider,
+  .responsive-image,
+  #Banner-{{ section.id }},
+  #Banner-{{ section.id }} .banner__media,
+  #Banner-{{ section.id }} .banner__media img {
+    border-radius: 12px !important; /* ejemplo: menos redondeado en desktop */
+    overflow: hidden !important;
+  }
+}
+
+</style>
+
+{% if section.settings.exibir_banner-easy == true %}
+    <div class="slider ocultar-desktop banners desktop">
+        <div class="slides">
+            {%- for block in section.blocks -%}
+                {% if block.settings.banner_desktop %}
+                    <div class="slide" style="cursor:pointer;">
+                        <img onclick="location.href='{{ block.settings.link_banner_desktop }}'" src="{{ block.settings.banner_desktop | img_url: 'master' }}" class="responsive-image" />
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+       {% if section.settings.sem-slide == true %}
+        <div class="slider-dots"></div>
+        <div class="slider-control-prev">&#8249;</div>
+        <div class="slider-control-next">&#8250;</div>
+        {% endif %}
+    </div>
+
+    <div class="slider ocultar-mobile banners mobile">
+        <div class="slides">
+            {%- for block in section.blocks -%}
+                {% if block.settings.banner_mobile %}
+                    <div class="slide" style="cursor:pointer;">
+                        <img onclick="location.href='{{ block.settings.link_banner_mobile }}'" src="{{ block.settings.banner_mobile | img_url: 'master' }}" class="responsive-image" />
+                    </div>¿
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if section.settings.sem-slide == true %}
+        <div class="slider-dots"></div>
+        <div class="slider-control-prev">&#8249;</div>
+        <div class="slider-control-next">&#8250;</div>
+        {% endif %}
+    </div>
+{% if section.settings.sem-slide == true %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sliders = document.querySelectorAll('.slider');
+
+        sliders.forEach(function (slider) {
+            const slides = slider.querySelector('.slides');
+            const slideItems = Array.from(slider.querySelectorAll('.slide'));
+            const slideDots = slider.querySelector('.slider-dots');
+            const prevButton = slider.querySelector('.slider-control-prev');
+            const nextButton = slider.querySelector('.slider-control-next');
+            let currentIndex = 0;
+            let isTransitioning = false;
+            let slideCount = slideItems.length;
+
+            // Verificação se existem slides
+            if (slideCount === 0) {
+                console.error('Nenhum slide encontrado.');
+                return;
+            }
+
+            // Criação dos dots (bolinhas de navegação)
+            slideItems.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                dot.addEventListener('click', () => goToSlide(index));
+                slideDots.appendChild(dot);
+            });
+            const dots = slider.querySelectorAll('.slider-dot');
+            updateDots();
+
+            // Função para ir para o slide específico
+            function goToSlide(index) {
+                if (!isTransitioning) {
+                    currentIndex = index;
+                    updateSlide();
+                }
+            }
+
+            // Função para ir para o slide anterior
+            function prevSlide() {
+                if (!isTransitioning) {
+                    currentIndex = (currentIndex - 1 + slideCount) % slideCount;
+                    updateSlide();
+                }
+            }
+
+            // Função para ir para o próximo slide
+            function nextSlide() {
+                if (!isTransitioning) {
+                    currentIndex = (currentIndex + 1) % slideCount;
+                    updateSlide();
+                }
+            }
+
+            // Atualiza o slide atual com transição infinita
+            function updateSlide() {
+                isTransitioning = true;
+                const offset = -currentIndex * 100;
+                slides.style.transition = 'transform 1s ease-in-out';
+                slides.style.transform = `translateX(${offset}%)`;
+
+                updateDots();
+
+                // Quando o último slide for alcançado, mova o primeiro slide para o final e ajuste a posição
+                if (currentIndex === slideCount - 1) {
+                    setTimeout(() => {
+                        slides.style.transition = 'none'; // Remove a transição temporariamente
+                        slides.appendChild(slideItems[0]); // Move o primeiro slide para o final
+                        slides.style.transform = 'translateX(0)'; // Reseta a posição
+                        slideItems.push(slideItems.shift()); // Atualiza a lista de slides
+                        currentIndex = 0; // Reseta o índice para o começo
+                        setTimeout(() => {
+                            slides.style.transition = 'transform 1s ease-in-out'; // Reaplica a transição
+                            isTransitioning = false;
+                        }, 50);
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        isTransitioning = false;
+                    }, 1000);
+                }
+            }
+
+            // Atualiza os dots (indicadores) para refletir o slide ativo
+            function updateDots() {
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[currentIndex % slideCount].classList.add('active');
+            }
+
+            // Controle da transição automática com fallback para um valor padrão
+            let intervalo = {{ section.settings.day_intervalo_shipping | times: 1000 }};
+            if (!intervalo || isNaN(intervalo)) {
+                intervalo = 5000; // Valor padrão de 5 segundos se não definido corretamente
+                console.warn('Intervalo de tempo não encontrado, usando valor padrão de 5000 ms.');
+            }
+
+            // Define um intervalo automático para mudar de slide
+            const slideInterval = setInterval(nextSlide, intervalo);
+
+            // Atribui eventos de clique aos botões de navegação (anterior e próximo)
+            if (prevButton && nextButton) {
+                prevButton.addEventListener('click', () => {
+                    clearInterval(slideInterval); // Pausa o autoplay ao clicar
+                    prevSlide();
+                });
+                nextButton.addEventListener('click', () => {
+                    clearInterval(slideInterval); // Pausa o autoplay ao clicar
+                    nextSlide();
+                });
+            }
+        });
+    });
+</script>
+{% endif %}
+
+{% endif %}
+
+{% schema %}
+{
+    "name": "Banner PauloCodes",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configuraciones generales"
+        },
+        {
+            "type": "checkbox",
+            "id": "exibir_banner-easy",
+            "label": "Mostrar banner adaptable",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "sem-slide",
+            "label": "Desactivar diapositiva",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "day_intervalo_shipping",
+            "label": "Tiempo de diapositiva en segundos",
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "default": 5
+        }
+    ],
+    "blocks": [
+        {
+            "type": "heading",
+            "name": "Bloques móviles",
+            "limit": 10,
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "label": "Imagen de banner (móvil)",
+                    "id": "banner_mobile"
+                },
+                {
+                    "type": "url",
+                    "id": "link_banner_mobile",
+                    "label": "Enlace de banner (móvil)"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "name": "Bloques de escritorio",
+            "limit": 10,
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "label": "Imagen de banner (escritorio)",
+                    "id": "banner_desktop"
+                },
+                {
+                    "type": "url",
+                    "id": "link_banner_desktop",
+                    "label": "Enlace de banner (escritorio)"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "category": "Text",
+            "name": "Banner responsivo PauloCodes",
+            "settings": {}
+        }
+    ]
+}
+{% endschema %}

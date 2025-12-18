@@ -1,0 +1,150 @@
+{% if section.settings.imagen-barra-1 != blank %}
+<div id="shopify-section-bannerscroll" class="shopify-section">
+  <style>
+    /* === CONTENEDOR PRINCIPAL === */
+    #shopify-section-bannerscroll {
+      position: relative;
+      width: 100vw;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      background-color: {{ section.settings.color_fondo }} !important;
+      overflow: hidden;
+      margin-top: 0 !important;
+      padding: 16px 0;
+      z-index: 5;
+    }
+
+    /* === ESPACIO SUPERIOR (zona antes del banner) === */
+    #shopify-section-bannerscroll::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 16px; /* altura en desktop */
+      background-color: {{ section.settings.color_espacio }} !important;
+    }
+
+    /* === ELIMINAR DIVIDERS ANIMADOS DEL TEMA === */
+    #shopify-section-bannerscroll::after {
+      background-image: none !important;
+      height: 0 !important;
+    }
+
+    /* CONTENEDOR DEL SLIDER */
+    .scrolly-wrap {
+      display: flex;
+      overflow: hidden;
+      white-space: nowrap;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* PISTA DE LOGOS */
+    .scrolly-track {
+      display: flex;
+      align-items: center;
+      animation: scrollLoop 80s linear infinite;
+      will-change: transform;
+    }
+
+    /* LOGOS */
+    .scrolly-img {
+      height: 54px;
+      margin-right: 20px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* Pausa al pasar el mouse */
+    .scrolly-wrap:hover .scrolly-track {
+      animation-play-state: paused;
+    }
+
+    /* === Animación infinita suave === */
+    @keyframes scrollLoop {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* === Desktop === */
+    @media (min-width: 990px) {
+      .scrolly-img {
+        height: 62px;
+        margin-right: 28px;
+      }
+      #shopify-section-bannerscroll {
+        padding: 20px 0;
+      }
+    }
+
+    /* === Mobile === */
+    @media (max-width: 989px) {
+      .scrolly-img {
+        height: 42px;
+        margin-right: 14px;
+      }
+      #shopify-section-bannerscroll {
+        padding: 12px 0;
+      }
+
+      /* ← AJUSTE PARA MÓVIL: altura del espacio superior */
+      #shopify-section-bannerscroll::before {
+        height: 8px !important; /* ajusta este valor */
+      }
+    }
+  </style>
+
+  <!-- SCROLL INFINITO -->
+  <div class="scrolly-wrap">
+    <div class="scrolly-track" id="logo-track">
+      {% for i in (1..10) %}
+        <img src="{{ section.settings.imagen-barra-1 | img_url: 'master' }}" alt="Método de pago" class="scrolly-img" />
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    // Duplica dinámicamente el contenido para lograr el loop perfecto
+    const track = document.getElementById("logo-track");
+    if (track) {
+      const clone = track.cloneNode(true);
+      track.parentNode.appendChild(clone);
+    }
+  </script>
+</div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Barra slide PauloCodes",
+  "settings": [
+    {
+      "type": "image_picker",
+      "label": "Imagen",
+      "id": "imagen-barra-1"
+    },
+    {
+      "type": "color",
+      "id": "color_fondo",
+      "label": "Color de fondo del banner",
+      "default": "#E9ECEF"
+    },
+    {
+      "type": "color",
+      "id": "color_espacio",
+      "label": "Color del espacio superior",
+      "default": "#C7C7C7"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Barra slide Paulo Codes",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

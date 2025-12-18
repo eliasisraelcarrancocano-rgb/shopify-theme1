@@ -1,0 +1,115 @@
+{% if section.settings.imagen-barra-1 != blank %}
+<div id="shopify-section-bannerscroll" class="shopify-section">
+  <style>
+    /* 2) Estica o bloco para 100% da tela, pulando o container do tema */
+    #shopify-section-bannerscroll {
+      position: relative;
+      width: 100vw;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* 1) Desativa as máscaras brancas */
+    #shopify-section-bannerscroll .scrolly-desktop:before,
+    #shopify-section-bannerscroll .scrolly-desktop:after {
+      display: none !important;
+    }
+
+    /* Container de rolagem */
+    .scrolly-wrap {
+      white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+      padding: 0;
+    }
+
+    .scrolly-slide {
+      display: inline-block;
+      animation: scrollyAnim 96s linear infinite;
+    }
+
+    .scrolly-img {
+      max-width: -webkit-fill-available;
+      height: 32px;
+      margin-right: -8px;
+      border: none;
+      vertical-align: top;
+    }
+
+    .scrolly-wrap:hover .scrolly-slide {
+      animation-play-state: paused;
+    }
+
+    @keyframes scrollyAnim {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-100%); }
+    }
+
+    @media (min-width: 767px) {
+      .scrolly-mobile { display: none; }
+      .scrolly-desktop { display: block; }
+    }
+    @media (max-width: 766px) {
+      .scrolly-desktop { display: none; }
+      .scrolly-mobile { display: block; }
+    }
+  </style>
+
+  <!-- Desktop -->
+  <div class="scrolly-wrap scrolly-desktop" role="region" aria-label="Rolagem de imagens desktop">
+    <a href="/collections/all">
+      <div class="scrolly-slide scrolly-desktop-slide">
+        {% for i in (1..10) %}
+          <img src="{{ section.settings.imagen-barra-1 | img_url: 'master' }}"
+               alt="Promoção" class="scrolly-img" />
+        {% endfor %}
+      </div>
+    </a>
+  </div>
+
+  <!-- Mobile -->
+  <div class="scrolly-wrap scrolly-mobile" role="region" aria-label="Rolagem de imagens mobile">
+    <a href="/collections/all">
+      <div class="scrolly-slide scrolly-mobile-slide">
+        {% for i in (1..10) %}
+          <img src="{{ section.settings.imagen-barra-1 | img_url: 'master' }}"
+               alt="Promoção" class="scrolly-img" />
+        {% endfor %}
+      </div>
+    </a>
+  </div>
+
+  <script>
+    (function() {
+      var d = document.querySelector('.scrolly-desktop-slide');
+      if (d) d.parentNode.appendChild(d.cloneNode(true));
+      var m = document.querySelector('.scrolly-mobile-slide');
+      if (m) m.parentNode.appendChild(m.cloneNode(true));
+    })();
+  </script>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Barra slide PauloCodes",
+    "settings": [
+      {
+         "type": "image_picker",
+         "label": "Imagen",
+         "id": "imagen-barra-1"
+       }
+    ],
+     "presets": [
+      {
+        "category": "Text",
+        "name": "Barra slide Paulo Codes",
+        "settings": {}
+       }
+    ]
+  }
+{% endschema %}
