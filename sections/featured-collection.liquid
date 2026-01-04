@@ -46,6 +46,29 @@
   .section-{{ section.id }} .product-grid.grid {
     gap: 14px;
   }
+
+  .section-{{ section.id }} .slider--mobile {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    padding-inline: 0;
+    touch-action: pan-y;
+  }
+
+  .section-{{ section.id }} .slider--mobile.grid--peek {
+    margin: 0;
+  }
+
+  .section-{{ section.id }} .slider--mobile .slider__slide {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .section-{{ section.id }} .slider--mobile.grid--2-col-tablet-down .grid__item {
+    width: 50%;
+    flex: 0 0 50%;
+  }
 }
 
 .section-{{ section.id }} .card-wrapper,
@@ -127,27 +150,6 @@
 
 .section-{{ section.id }} .card__information {
   row-gap: 6px;
-}
-
-@media (max-width: 749px) {
-  .section-{{ section.id }} slider-component {
-    padding: 0;
-  }
-
-  .section-{{ section.id }} .slider--mobile {
-    scroll-snap-type: x mandatory;
-    gap: 0;
-  }
-
-  .section-{{ section.id }} .slider--mobile .slider__slide {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
-  .section-{{ section.id }} .slider--mobile.grid--2-col-tablet-down .grid__item {
-    width: 50%;
-    flex: 0 0 50%;
-  }
 }
 
 .section-{{ section.id }} .collection__view-all {
@@ -281,7 +283,7 @@
       {%- endif -%}
     </slider-component>
 
-    {%- if section.settings.show_view_all and collection_to_display != blank -%}
+    {%- if section.settings.show_view_all -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
           href="{{ section.settings.collection.url }}"
