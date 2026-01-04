@@ -29,18 +29,18 @@
 .section-{{ section.id }} .product-grid {
   max-width: 1400px;
   margin: 0 auto;
-  gap: 22px;
+  gap: 20px;
   padding: 0 16px;
 }
 
 .section-{{ section.id }} .product-grid.grid {
-  gap: 22px;
+  gap: 20px;
 }
 
 @media (max-width: 749px) {
   .section-{{ section.id }} .product-grid {
     gap: 14px;
-    padding: 0 12px;
+    padding: 0 14px;
   }
 
   .section-{{ section.id }} .product-grid.grid {
@@ -54,7 +54,6 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
   background: #fff;
   height: 100%;
-  transition: transform 180ms ease, box-shadow 180ms ease;
   display: flex;
   flex-direction: column;
 }
@@ -103,15 +102,52 @@
   font-size: 1rem;
   line-height: 1.4;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.4em * 2);
 }
 
 .section-{{ section.id }} .price {
   font-weight: 600;
   font-size: 1.02rem;
+  line-height: 1.3;
+  min-height: calc(1.3em * 2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.section-{{ section.id }} .price .price__container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .section-{{ section.id }} .card__information {
   row-gap: 6px;
+}
+
+@media (max-width: 749px) {
+  .section-{{ section.id }} slider-component {
+    padding: 0;
+  }
+
+  .section-{{ section.id }} .slider--mobile {
+    scroll-snap-type: x mandatory;
+    gap: 0;
+  }
+
+  .section-{{ section.id }} .slider--mobile .slider__slide {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .section-{{ section.id }} .slider--mobile.grid--2-col-tablet-down .grid__item {
+    width: 50%;
+    flex: 0 0 50%;
+  }
 }
 
 .section-{{ section.id }} .collection__view-all {
@@ -245,7 +281,7 @@
       {%- endif -%}
     </slider-component>
 
-    {%- if section.settings.show_view_all and more_in_collection -%}
+    {%- if section.settings.show_view_all and collection_to_display != blank -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
         <a
           href="{{ section.settings.collection.url }}"
